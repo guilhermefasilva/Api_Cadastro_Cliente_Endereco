@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import io.guilhermefasilva.api.cadastro.entity.Endereco;
+import lombok.Getter;
 
+@Getter
 public class EnderecoDtoResponse {
 
 	private Long id;
@@ -22,25 +24,6 @@ public class EnderecoDtoResponse {
 		this.cidade = endereco.getCidade();
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public String getLogradouro() {
-		return logradouro;
-	}
-
-	public int getNumero() {
-		return numero;
-	}
-
-	public String getBairro() {
-		return bairro;
-	}
-
-	public String getCidade() {
-		return cidade;
-	}
 
 	public static List<EnderecoDtoResponse> converter(List<Endereco> endereco) {
 			return endereco.stream().map(EnderecoDtoResponse::new).collect(Collectors.toList());

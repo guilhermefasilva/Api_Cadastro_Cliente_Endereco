@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import io.guilhermefasilva.api.cadastro.entity.Cliente;
+import lombok.Getter;
 
+@Getter
 public class ClienteDtoResponse {
 	
 	private Long id;
@@ -21,19 +23,7 @@ public class ClienteDtoResponse {
 		this.cpf = cliente.getCpf();
 	}
 	
-	public Long getId() {
-		return id;
-	}
-	public String getNome() {
-		return nome;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public String getCpf() {
-		return cpf;
-	}
-
+	
 	
 	public static List<ClienteDtoResponse> converter(List<Cliente> cliente){
 		return cliente.stream().map(ClienteDtoResponse::new).collect(Collectors.toList());
