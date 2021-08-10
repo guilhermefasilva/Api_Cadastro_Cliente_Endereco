@@ -14,6 +14,9 @@ public class EnderecoDtoResponse {
 	private int numero;
 	private String bairro;
 	private String cidade;
+	
+	
+
 
 	public EnderecoDtoResponse(Endereco endereco) {
 		
@@ -24,6 +27,7 @@ public class EnderecoDtoResponse {
 		this.cidade = endereco.getCidade();
 	}
 
+	
 
 	public static List<EnderecoDtoResponse> converter(List<Endereco> endereco) {
 			return endereco.stream().map(EnderecoDtoResponse::new).collect(Collectors.toList());

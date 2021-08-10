@@ -10,8 +10,9 @@ public class EnderecoDtoRequest {
 	private int numero;
 	private String bairro;
 	private String cidade;
+	private ClienteDtoRequest cliente;
 	
 	public Endereco converter() {
-		return new Endereco(logradouro, numero, bairro, cidade );
+		return new Endereco(logradouro, numero, bairro, cidade, cliente.converter());
 	}
 }

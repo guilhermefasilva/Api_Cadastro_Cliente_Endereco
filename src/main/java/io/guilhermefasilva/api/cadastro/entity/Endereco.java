@@ -4,9 +4,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,7 +15,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "tb_endereco")
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class Endereco {
 	
 	@Id
@@ -25,10 +25,17 @@ public class Endereco {
 	private String bairro;
 	private String cidade;
 	
-	public Endereco(String logradouro, int numero, String bairro, String cidade) {
+	@ManyToOne
+	@JoinColumn(name = "cliente_id")
+	private Cliente cliente;
+	
+	public Endereco(String logradouro, int numero, String bairro, String cidade, Cliente cliente) {
 		this.logradouro = logradouro;
 		this.numero = numero;
 		this.bairro = bairro;
 		this.cidade = cidade;
+		this.cliente = cliente;
 	}
+	
+	
 }
