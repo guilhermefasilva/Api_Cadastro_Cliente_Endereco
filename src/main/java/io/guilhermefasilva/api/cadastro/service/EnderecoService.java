@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import io.guilhermefasilva.api.cadastro.dto.request.EnderecoDtoRequest;
 import io.guilhermefasilva.api.cadastro.dto.response.EnderecoDtoResponse;
 import io.guilhermefasilva.api.cadastro.entity.Endereco;
+import io.guilhermefasilva.api.cadastro.exception.ResourceNotFoundException;
 import io.guilhermefasilva.api.cadastro.repository.EnderecoRepository;
 
 @Service
@@ -24,12 +25,12 @@ public class EnderecoService {
 
 	public List<EnderecoDtoResponse> findAll() {
 		List<Endereco> endereco = enderecoRepository.findAll();
-		return endereco.stream().map(e -> modelMapper.map(e, EnderecoDtoResponse.class)).collect(Collectors.toList());
+		return mapList(endereco, EnderecoDtoResponse.class);
 	}
 
 	public EnderecoDtoResponse findById(Long id) {
 		Endereco endereco = enderecoRepository.findById(id)
-				.orElseThrow(()-> new RuntimeException("Endereco não enconstrado"));
+				.orElseThrow(()-> new ResourceNotFoundException(id));
 		return modelMapper.map(endereco, EnderecoDtoResponse.class);
 	}
 
@@ -41,7 +42,7 @@ public class EnderecoService {
 
 	public EnderecoDtoResponse update(Long id, EnderecoDtoRequest enderecoDtoRequest) {
 		Endereco endereco = enderecoRepository.findById(id)
-				.orElseThrow(()-> new RuntimeException("Endereco não encontrado"));
+				.orElseThrow(()-> new ResourceNotFoundException(id));
 		
 		endereco.setLogradouro(enderecoDtoRequest.getLogradouro());
 		endereco.setNumero(enderecoDtoRequest.getNumero());
@@ -56,8 +57,18 @@ public class EnderecoService {
 
 	public void delete(Long id) {
 		Endereco endereco = enderecoRepository.findById(id)
-				.orElseThrow(()-> new RuntimeException("Endereco não encontrado"));
+				.orElseThrow(()-> new ResourceNotFoundException(id));
 		this.enderecoRepository.delete(endereco);
 	}
 
+	
+	private <S,T> List<T> mapList (List<S> origem, Class<T> classeAlvo){
+		return origem.stream()
+				.map(e -> modelMapper.map(e, classeAlvo))
+				.collect(Collectors.toList());
+	}
+	
+	
+	
+	
 }

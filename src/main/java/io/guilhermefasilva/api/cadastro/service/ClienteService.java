@@ -6,10 +6,12 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import io.guilhermefasilva.api.cadastro.dto.request.ClienteDtoRequest;
 import io.guilhermefasilva.api.cadastro.dto.request.ClienteDtoRequestUpdate;
 import io.guilhermefasilva.api.cadastro.dto.response.ClienteDtoResponse;
 import io.guilhermefasilva.api.cadastro.entity.Cliente;
+import io.guilhermefasilva.api.cadastro.exception.ResourceNotFoundException;
 import io.guilhermefasilva.api.cadastro.repository.ClienteRepository;
 
 @Service
@@ -33,7 +35,7 @@ public class ClienteService {
 	
 	public ClienteDtoResponse getClientById(Long id) {
 		Cliente cliente = clienteRepository.findById(id)
-				.orElseThrow(()-> new RuntimeException("Cliente não encontrado"));
+				.orElseThrow(()-> new ResourceNotFoundException(id));
 		return modelMapper.map(cliente, ClienteDtoResponse.class);
 		
 		
@@ -51,7 +53,7 @@ public class ClienteService {
 	
 	public  ClienteDtoResponse update(Long id, ClienteDtoRequestUpdate clienteRequest) {
 			Cliente cliente = clienteRepository.findById(id)
-					.orElseThrow(()-> new RuntimeException("Cliente não encontrado"));
+					.orElseThrow(()-> new ResourceNotFoundException(id));
 			cliente.setNome(clienteRequest.getNome());
 			cliente.setEmail(clienteRequest.getEmail());
 			this.clienteRepository.save(cliente);
@@ -60,7 +62,7 @@ public class ClienteService {
 	
 	public void delete(Long id){
 		Cliente cliente = clienteRepository.findById(id)
-				.orElseThrow(()-> new RuntimeException("Cliente não encontrado"));
+				.orElseThrow(()-> new ResourceNotFoundException(id));
 		this.clienteRepository.delete(cliente);		
 	}
 	
