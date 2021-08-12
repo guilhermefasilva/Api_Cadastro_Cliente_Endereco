@@ -5,12 +5,15 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import io.guilhermefasilva.api.cadastro.dto.request.ClienteDtoRequest;
 import io.guilhermefasilva.api.cadastro.dto.request.ClienteDtoRequestUpdate;
 import io.guilhermefasilva.api.cadastro.dto.response.ClienteDtoResponse;
 import io.guilhermefasilva.api.cadastro.entity.Cliente;
+import io.guilhermefasilva.api.cadastro.exception.DatabaseException;
 import io.guilhermefasilva.api.cadastro.exception.ResourceNotFoundException;
 import io.guilhermefasilva.api.cadastro.repository.ClienteRepository;
 
@@ -61,9 +64,16 @@ public class ClienteService {
 		}
 	
 	public void delete(Long id){
-		Cliente cliente = clienteRepository.findById(id)
-				.orElseThrow(()-> new ResourceNotFoundException(id));
-		this.clienteRepository.delete(cliente);		
+		
+		try {
+			this.clienteRepository.deleteById(id);
+		}catch (EmptyResultDataAccessException e) {
+			throw new ResourceNotFoundException(id);
+		}catch (DataIntegrityViolationException e) {
+			throw new DatabaseException(e.getMessage());
+		}		
+		
+		
 	}
 	
 	
