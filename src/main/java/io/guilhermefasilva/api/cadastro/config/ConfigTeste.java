@@ -22,8 +22,12 @@ public class ConfigTeste implements CommandLineRunner{
 	
 	@Override
 	public void run(String... args) throws Exception {
+		
+		
 		Cliente c1 = new Cliente("Maria", "12345678901", "maria@email.com");
 		Cliente c2 = new Cliente("Joao", "12345678911", "joao@email.com");
+		
+		clienteRepository.saveAll(Arrays.asList(c1, c2));
 		
 		
 		Endereco e1 = new Endereco("Av Amazonas", 150, "Centro", "Fortaleza", c1);
@@ -31,9 +35,11 @@ public class ConfigTeste implements CommandLineRunner{
 		Endereco e3 = new Endereco("Rua Almirante Tamandare", 587, "São José", "Divinópolis", c1);
 		Endereco e4 = new Endereco("Av bandeirantes", 698, "São Januario", "São Paulo", c2);
 		
-		
-		clienteRepository.saveAll(Arrays.asList(c1, c2));
 		enderecoRepository.saveAll(Arrays.asList(e1, e2, e3, e4));
+		
+		
+		
+		
 		
 		
 		

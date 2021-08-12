@@ -1,9 +1,9 @@
 package io.guilhermefasilva.api.cadastro.dto.request;
 
-import lombok.Data;
+import lombok.Getter;
 
 
-@Data
+@Getter
 public class ClienteDtoRequest {
 
 	private String nome;

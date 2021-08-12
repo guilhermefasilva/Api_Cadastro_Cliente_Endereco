@@ -1,7 +1,7 @@
 package io.guilhermefasilva.api.cadastro.service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,22 +24,24 @@ public class EnderecoService {
 
 	public List<EnderecoDtoResponse> findAll() {
 		List<Endereco> endereco = enderecoRepository.findAll();
-		return EnderecoDtoResponse.converter(endereco);
+		return endereco.stream().map(e -> modelMapper.map(e, EnderecoDtoResponse.class)).collect(Collectors.toList());
 	}
 
 	public EnderecoDtoResponse findById(Long id) {
-		Optional<Endereco> endereco = enderecoRepository.findById(id);
-		return new EnderecoDtoResponse(endereco.get());
+		Endereco endereco = enderecoRepository.findById(id)
+				.orElseThrow(()-> new RuntimeException("Endereco não enconstrado"));
+		return modelMapper.map(endereco, EnderecoDtoResponse.class);
 	}
 
 	public EnderecoDtoResponse insert(EnderecoDtoRequest enderecoDtoRequest) {
 		Endereco endereco = modelMapper.map(enderecoDtoRequest, Endereco.class);
 		this.enderecoRepository.save(endereco);
-		return new EnderecoDtoResponse(endereco);
+		return modelMapper.map(endereco, EnderecoDtoResponse.class);
 	}
 
 	public EnderecoDtoResponse update(Long id, EnderecoDtoRequest enderecoDtoRequest) {
-		Endereco endereco = enderecoRepository.getById(id);
+		Endereco endereco = enderecoRepository.findById(id)
+				.orElseThrow(()-> new RuntimeException("Endereco não encontrado"));
 		
 		endereco.setLogradouro(enderecoDtoRequest.getLogradouro());
 		endereco.setNumero(enderecoDtoRequest.getNumero());
@@ -48,12 +50,14 @@ public class EnderecoService {
 		
 		this.enderecoRepository.save(endereco);
 
-		return new EnderecoDtoResponse(endereco);
+		return modelMapper.map(endereco, EnderecoDtoResponse.class);
 
 	}
 
 	public void delete(Long id) {
-		this.enderecoRepository.deleteById(id);
+		Endereco endereco = enderecoRepository.findById(id)
+				.orElseThrow(()-> new RuntimeException("Endereco não encontrado"));
+		this.enderecoRepository.delete(endereco);
 	}
 
 }

@@ -47,11 +47,6 @@ public class ClienteService {
 		
 	}
 	
-	public void delete(Long id){
-		Cliente cliente = clienteRepository.findById(id)
-				.orElseThrow(()-> new RuntimeException("Cliente não encontrado"));
-		clienteRepository.delete(cliente);		
-	}
 	
 	
 	public  ClienteDtoResponse update(Long id, ClienteDtoRequestUpdate clienteRequest) {
@@ -62,6 +57,13 @@ public class ClienteService {
 			this.clienteRepository.save(cliente);
 			return modelMapper.map(cliente, ClienteDtoResponse.class);
 		}
+	
+	public void delete(Long id){
+		Cliente cliente = clienteRepository.findById(id)
+				.orElseThrow(()-> new RuntimeException("Cliente não encontrado"));
+		this.clienteRepository.delete(cliente);		
+	}
+	
 	
 	
 	
