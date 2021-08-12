@@ -3,6 +3,7 @@ package io.guilhermefasilva.api.cadastro.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,10 @@ public class EnderecoService {
 
 	@Autowired
 	private EnderecoRepository enderecoRepository;
+	
+	@Autowired
+	private ModelMapper modelMapper;
+	
 
 	public List<EnderecoDtoResponse> findAll() {
 		List<Endereco> endereco = enderecoRepository.findAll();
@@ -28,7 +33,8 @@ public class EnderecoService {
 	}
 
 	public EnderecoDtoResponse insert(EnderecoDtoRequest enderecoDtoRequest) {
-		Endereco endereco = enderecoRepository.save(enderecoDtoRequest.converter());
+		Endereco endereco = modelMapper.map(enderecoDtoRequest, Endereco.class);
+		this.enderecoRepository.save(endereco);
 		return new EnderecoDtoResponse(endereco);
 	}
 

@@ -15,8 +15,6 @@ public class EnderecoDtoResponse {
 	private String bairro;
 	private String cidade;
 	
-	
-
 
 	public EnderecoDtoResponse(Endereco endereco) {
 		
@@ -25,6 +23,7 @@ public class EnderecoDtoResponse {
 		this.numero = endereco.getNumero();
 		this.bairro = endereco.getBairro();
 		this.cidade = endereco.getCidade();
+		
 	}
 
 	
