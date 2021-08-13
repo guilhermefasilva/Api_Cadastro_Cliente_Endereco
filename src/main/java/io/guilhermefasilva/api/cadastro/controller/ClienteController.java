@@ -40,9 +40,9 @@ public class ClienteController {
 	@ApiOperation("Persistir um cliente no repositorio de dados")
 	@ApiResponses(value = { 
 			@ApiResponse(code = 201, message = "Cliente Cadastrado"),
-			@ApiResponse(code = 400, message = "Erro de Validação")
+			@ApiResponse(code = 400, message = "Erro de Validação, requisição não atendida")
 			})
-	public ResponseEntity<ClienteDtoResponse> create(@RequestBody ClienteDtoRequest clienteDtoRequest){
+	public ResponseEntity<ClienteDtoResponse> create(@RequestBody @ApiParam("Cliente para cadastro") ClienteDtoRequest clienteDtoRequest){
 		ClienteDtoResponse clienteResponse = clienteService.insert(clienteDtoRequest);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(clienteResponse.getId()).toUri();
 		return ResponseEntity.created(uri).body(clienteResponse);
@@ -52,7 +52,11 @@ public class ClienteController {
 
 	@GetMapping
 	@ApiOperation("Listar todos os clientes")
-	@ApiResponse(code = 503, message = "Servidor não pode manipular a requisição")
+	@ApiResponses({
+		@ApiResponse(code = 200, message = "Requisição bem sucedida"),
+		@ApiResponse(code = 404, message = "Recurso não encontrado"),
+		@ApiResponse(code = 503, message = "Servidor não pode manipular a requisição") 
+	})
 	public ResponseEntity<List<ClienteDtoResponse>> findAll() {
 		List<ClienteDtoResponse> clientes =  clienteService.getAllClients();
 		return ResponseEntity.ok().body(clientes);
@@ -84,7 +88,7 @@ public class ClienteController {
 			@ApiResponse(code = 200, message = "Requisiçao bem sucedida"),
 			@ApiResponse(code = 404, message = "Recurso não encontrado")
 			})
-	public ResponseEntity<ClienteDtoResponse> atualizar(@PathVariable Long id, @RequestBody ClienteDtoRequestUpdate clienteDtoRequestUpdate){
+	public ResponseEntity<ClienteDtoResponse> atualizar(@PathVariable Long id, @ApiParam("Id do cliente") @RequestBody ClienteDtoRequestUpdate clienteDtoRequestUpdate){
 		ClienteDtoResponse clienteResponse = clienteService.update(id, clienteDtoRequestUpdate);
 		return ResponseEntity.ok().body(clienteResponse);
 	}
@@ -95,10 +99,11 @@ public class ClienteController {
 	@DeleteMapping("{id}")
 	@ApiOperation("Deletar um cliente passando o Id correspondente como parametro")
 	@ApiResponses(value = { 
-			@ApiResponse(code = 200, message = "Requisição bem sucedida"),
-			@ApiResponse(code = 400, message = "Recurso não pode ser excluido")
+			@ApiResponse(code = 204, message = "Não há conteudos a ser exibidos ou enviados, requisição bem sucedida"),
+			@ApiResponse(code = 400, message = "Recurso não pode ser excluido"),
+			@ApiResponse(code = 404, message = "Recurso não encontrado")
 			})
-	public ResponseEntity<?> delete(@PathVariable Long id){
+	public ResponseEntity<?> delete(@PathVariable @ApiParam("Id do cliente") Long id){
 		this.clienteService.delete(id);
 		return ResponseEntity.noContent().build();		
 	}
