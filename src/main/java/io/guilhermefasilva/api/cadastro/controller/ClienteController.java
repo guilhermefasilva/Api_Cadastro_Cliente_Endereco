@@ -21,6 +21,10 @@ import io.guilhermefasilva.api.cadastro.dto.request.ClienteDtoRequest;
 import io.guilhermefasilva.api.cadastro.dto.request.ClienteDtoRequestUpdate;
 import io.guilhermefasilva.api.cadastro.dto.response.ClienteDtoResponse;
 import io.guilhermefasilva.api.cadastro.service.ClienteService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping("/cliente")
@@ -33,6 +37,11 @@ public class ClienteController {
 	
 	@PostMapping
 	@Transactional
+	@ApiOperation("Persistir um cliente no repositorio de dados")
+	@ApiResponses(value = { 
+			@ApiResponse(code = 201, message = "Cliente Cadastrado"),
+			@ApiResponse(code = 400, message = "Erro de Validação")
+			})
 	public ResponseEntity<ClienteDtoResponse> create(@RequestBody ClienteDtoRequest clienteDtoRequest){
 		ClienteDtoResponse clienteResponse = clienteService.insert(clienteDtoRequest);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(clienteResponse.getId()).toUri();
@@ -42,6 +51,8 @@ public class ClienteController {
 
 
 	@GetMapping
+	@ApiOperation("Listar todos os clientes")
+	@ApiResponse(code = 503, message = "Servidor não pode manipular a requisição")
 	public ResponseEntity<List<ClienteDtoResponse>> findAll() {
 		List<ClienteDtoResponse> clientes =  clienteService.getAllClients();
 		return ResponseEntity.ok().body(clientes);
@@ -52,7 +63,12 @@ public class ClienteController {
 
 
 	@GetMapping("/{id}")
-	public ResponseEntity<ClienteDtoResponse> findById(@PathVariable Long id){
+	@ApiOperation("Pesquisar um cliente por Id especifico")
+	@ApiResponses(value = { 
+			@ApiResponse(code = 200, message = "Requisição bem sucedida"),
+			@ApiResponse(code = 404, message = "Recurso não encontrado")
+			})
+	public ResponseEntity<ClienteDtoResponse> findById(@PathVariable @ApiParam("Id do cliente") Long id){
 		ClienteDtoResponse clienteResponse = clienteService.getClientById(id);
 		return ResponseEntity.ok().body(clienteResponse);
 	}
@@ -63,6 +79,11 @@ public class ClienteController {
 	
 	@PutMapping("{id}")
 	@Transactional
+	@ApiOperation("Atualizar os dados de um cliente passando o Id correspondente como parametro")
+	@ApiResponses(value = { 
+			@ApiResponse(code = 200, message = "Requisiçao bem sucedida"),
+			@ApiResponse(code = 404, message = "Recurso não encontrado")
+			})
 	public ResponseEntity<ClienteDtoResponse> atualizar(@PathVariable Long id, @RequestBody ClienteDtoRequestUpdate clienteDtoRequestUpdate){
 		ClienteDtoResponse clienteResponse = clienteService.update(id, clienteDtoRequestUpdate);
 		return ResponseEntity.ok().body(clienteResponse);
@@ -70,7 +91,13 @@ public class ClienteController {
 	
 
 	
+	
 	@DeleteMapping("{id}")
+	@ApiOperation("Deletar um cliente passando o Id correspondente como parametro")
+	@ApiResponses(value = { 
+			@ApiResponse(code = 200, message = "Requisição bem sucedida"),
+			@ApiResponse(code = 400, message = "Recurso não pode ser excluido")
+			})
 	public ResponseEntity<?> delete(@PathVariable Long id){
 		this.clienteService.delete(id);
 		return ResponseEntity.noContent().build();		
