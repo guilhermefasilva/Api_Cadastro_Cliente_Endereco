@@ -60,9 +60,8 @@ public class EnderecoController {
 			value = "Listar todos endereços",
 			response = EnderecoDtoResponse.class,
 			nickname = "findAll",
-			notes = "Não há parametros a serem repassados, apenas a chamada da URi faá com que todos endereços persistidos"
-					+ "\n no banco de dados, sejam retornados no corpo da requisição "
-			)
+			notes = "Não há parametros a serem repassados, apenas a chamada da URI fará com que todos endereços persistidos"
+					+ "\n no banco de dados, sejam retornados no corpo da requisição ")
 	@ApiResponses(value = { 
 			@ApiResponse(code = 200, message = "Requisição bem sucedida"),
 			@ApiResponse(code = 404, message = "Recurso não encontrado"),
